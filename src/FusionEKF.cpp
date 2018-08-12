@@ -1,6 +1,7 @@
 #include "FusionEKF.h"
 #include "Eigen/Dense"
 #include <iostream>
+#include <string>
 
 using namespace std;
 using Eigen::MatrixXd;
@@ -36,6 +37,10 @@ FusionEKF::FusionEKF() {
   noise_ax = 9;
   noise_ay = 9;
 
+  /*
+   * private variable for debug
+   */
+  fn = "Constructor";
 }
 
 /**
@@ -44,22 +49,24 @@ FusionEKF::FusionEKF() {
 FusionEKF::~FusionEKF() {}
 
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
-
-
+  fn = "ProcessMeasurement";
+ 
+  FUSION_DEBUG(fn, "Start");
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
   if (!is_initialized_) {
+    FUSION_DEBUG(fn, "initializ");
     /**
       * Initialize the state ekf_.x_ with the first measurement.
       * Create the covariance matrix.
       * Remember: you'll need to convert radar from polar to cartesian coordinates.
     */
     // first measurement
-    // cout << "EKF: " << endl;
     ekf_.x_ = VectorXd(4);
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
+      FUSION_DEBUG(fn, "RADAR");
       /**
       Convert radar from polar to cartesian coordinates and initialize state.
       */
@@ -74,6 +81,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       ekf_.x_ << ro * cos(theta), ro * sin(theta), 0, 0;  // x, y, vx, vy
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
+      FUSION_DEBUG(fn, "LASER");
       /**
       Initialize state.
       */
@@ -103,6 +111,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * Update the process noise covariance matrix.
      * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
    */
+  FUSION_DEBUG(fn, "Prediction");
 
   // Compute the time from the previous measurement in seconds.
   float dt = (measurement_pack.timestamp_ - previous_timestamp_)/1000000.0;
@@ -130,7 +139,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   /*****************************************************************************
    *  Update
    ****************************************************************************/
-
+  FUSION_DEBUG(fn, "Update");
+ 
   /**
      * Use the sensor type to perform the update step.
      * Update the state and covariance matrices.

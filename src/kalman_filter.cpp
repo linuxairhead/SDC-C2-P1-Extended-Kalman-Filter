@@ -1,4 +1,5 @@
 #include "kalman_filter.h"
+#include <string>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -6,12 +7,20 @@ using Eigen::VectorXd;
 // Please note that the Eigen library does not initialize 
 // VectorXd or MatrixXd objects with zeros upon creation.
 
-KalmanFilter::KalmanFilter() {}
+KalmanFilter::KalmanFilter() {
+  /*
+   * private variable for debug
+   */
+  fn = "Constructor";
+}
 
 KalmanFilter::~KalmanFilter() {}
 
 void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
                         MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in) {
+
+  fn = "Init";
+  KF_DEBUG(fn, " ");
   x_ = x_in;
   P_ = P_in;
   F_ = F_in;
@@ -21,6 +30,10 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 }
 
 void KalmanFilter::Predict() {
+  
+  fn = "Predict";
+  KF_DEBUG(fn, " ");
+
   /**
     * predict the state
   */
@@ -29,6 +42,10 @@ void KalmanFilter::Predict() {
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
+
+  fn = "Update";
+  KF_DEBUG(fn, " ");
+
   /**
     * update the state by using Kalman Filter equations
   */
@@ -41,6 +58,10 @@ void KalmanFilter::Update(const VectorXd &z) {
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
+
+  fn = "UpdateEFK";
+  KF_DEBUG(fn, " ");
+
   /**
     * update the state by using Extended Kalman Filter equations
   */

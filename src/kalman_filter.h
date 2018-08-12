@@ -1,7 +1,16 @@
 #ifndef KALMAN_FILTER_H_
 #define KALMAN_FILTER_H_
+
 #include "Eigen/Dense"
 #include "tools.h"
+#include <iostream>
+#include <string>
+
+#ifdef DEBUG 
+#define KF_DEBUG(fn, log) std::cout << "KalmanFilter " << fn << " : " << log;
+#else
+#define KF_DEBUG(fn, log) 
+#endif
 
 class KalmanFilter {
 public:
@@ -77,6 +86,8 @@ public:
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
+private:
+  string fn;
 };
 
 #endif /* KALMAN_FILTER_H_ */

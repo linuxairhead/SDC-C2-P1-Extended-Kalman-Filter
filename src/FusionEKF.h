@@ -2,11 +2,17 @@
 #define FusionEKF_H_
 
 #include "measurement_package.h"
+#include "kalman_filter.h"
 #include "Eigen/Dense"
+#include <fstream>
 #include <vector>
 #include <string>
-#include <fstream>
-#include "kalman_filter.h"
+
+#ifdef DEBUG
+#define FUSION_DEBUG(fn, log) std::cout << "FusionEKF " << fn << " : " << log;
+#else
+#define FUSION_DEBUG(fn, log)
+#endif
 
 class FusionEKF {
 public:
@@ -31,6 +37,8 @@ public:
   KalmanFilter ekf_;
 
 private:
+  string fn;
+
   // check whether the tracking toolbox was initialized or not (first measurement)
   bool is_initialized_;
 
