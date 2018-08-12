@@ -1,6 +1,7 @@
 #ifndef KALMAN_FILTER_H_
 #define KALMAN_FILTER_H_
 #include "Eigen/Dense"
+#include "tools.h"
 
 class KalmanFilter {
 public:
@@ -22,6 +23,18 @@ public:
 
   // measurement covariance matrix
   Eigen::MatrixXd R_;
+
+  // Jacobian 
+  Eigen::MatrixXd Hj_;
+
+  // Identity matrix
+  Eigen::MatrixXd I_;
+
+  // Const PI
+  const float PI = 3.141592;
+ 
+  // tool object used to compute Jacobian and RMSE
+  Tools tools;
 
   /**
    * Constructor
