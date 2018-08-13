@@ -131,6 +131,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	previous_timestamp_ = measurement_pack.timestamp_;
   
   FUSION_DEBUG(fn, "Prediction 2");
+  FUSION_DEBUG(fn, previous_timestamp_);
+  FUSION_DEBUG(fn, ekf_.F_);
 
   // Update the motion model matrix for a timestep dt.
   // We use a motion model with a constant velocity.
@@ -138,7 +140,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   ekf_.F_(1,3) = dt;
   
   FUSION_DEBUG(fn, "Prediction 3");
-
+  FUSION_DEBUG(fn, dt);
   // Update the process noise covariance matrix for a timestep dt.
   // Our motion model uses Gaussian random accelerations in the x and y directions.
   float dt2 = dt*dt;
@@ -154,15 +156,17 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	     dt3over2*noise_ax,                 0,      dt2*noise_ax,                 0,
 			     0, dt3over2*noise_ay,                 0,      dt2*noise_ay;
 
-  FUSION_DEBUG(fn, "Prediction 5");
-
+  FUSION_DEBUG(fn, "Prediction 5 x ");
+  FUSION_DEBUG(fn, ekf_.x_);
+  FUSION_DEBUG(fn, "Prediction 5 F ");
+  FUSION_DEBUG(fn, ekf_.F_);
   ekf_.Predict();
 
   /*****************************************************************************
    *  Update
    ****************************************************************************/
-  FUSION_DEBUG(fn, "Update");
- 
+ FUSION_DEBUG(fn, "Update");
+ FUSION_DEBUG(fn, measurement_pack.sensor_type_);
   /**
      * Use the sensor type to perform the update step.
      * Update the state and covariance matrices.
@@ -171,10 +175,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     FUSION_DEBUG(fn, "Update Radar");
     // Radar updates
+    ekf_.R_ = R_radar_;
     ekf_.UpdateEKF( measurement_pack.raw_measurements_ );
   } else {
     FUSION_DEBUG(fn, "Update Ladar");
-    // Laser updates
+    // Laser updates    
+    ekf_.H_ = H_laser_;
+    ekf_.R_ = R_laser_;
     ekf_.Update( measurement_pack.raw_measurements_ );
   }
 
