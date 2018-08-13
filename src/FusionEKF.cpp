@@ -32,8 +32,21 @@ FusionEKF::FusionEKF() {
 
   /**
     * Finish initializing the FusionEKF.
+    * VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in, MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in
+    */
+  VectorXd v = VectorXd(4);
+  MatrixXd m = MatrixXd(4, 4);
+
+  v << 0, 0, 0, 0;
+  m << 0, 0, 0, 0,
+       0, 0, 0, 0,
+       0, 0, 0, 0, 
+       0, 0, 0, 0;
+
+  ekf_.Init( v, m, m, m, m , m);
+  /**
     * Set the process and measurement noises
-  */
+    **/
   noise_ax = 9;
   noise_ay = 9;
 
@@ -63,7 +76,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       * Remember: you'll need to convert radar from polar to cartesian coordinates.
     */
     // first measurement
-    ekf_.x_ = VectorXd(4);
+    //ekf_.x_ = VectorXd(4);
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       FUSION_DEBUG(fn, "RADAR");
@@ -111,17 +124,21 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * Update the process noise covariance matrix.
      * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
    */
-  FUSION_DEBUG(fn, "Prediction");
+  FUSION_DEBUG(fn, "Prediction 1");
 
   // Compute the time from the previous measurement in seconds.
   float dt = (measurement_pack.timestamp_ - previous_timestamp_)/1000000.0;
 	previous_timestamp_ = measurement_pack.timestamp_;
   
+  FUSION_DEBUG(fn, "Prediction 2");
+
   // Update the motion model matrix for a timestep dt.
   // We use a motion model with a constant velocity.
   ekf_.F_(0,2) = dt;
   ekf_.F_(1,3) = dt;
   
+  FUSION_DEBUG(fn, "Prediction 3");
+
   // Update the process noise covariance matrix for a timestep dt.
   // Our motion model uses Gaussian random accelerations in the x and y directions.
   float dt2 = dt*dt;
@@ -130,10 +147,15 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   float dt4over4 = dt4/4.;
   float dt3over2 = dt3/2.;
 
+  FUSION_DEBUG(fn, "Prediction 4");
+
   ekf_.Q_ << dt4over4*noise_ax,                 0, dt3over2*noise_ax,                0,
 			     0, dt4over4*noise_ay,                 0, dt3over2*noise_ay,
 	     dt3over2*noise_ax,                 0,      dt2*noise_ax,                 0,
 			     0, dt3over2*noise_ay,                 0,      dt2*noise_ay;
+
+  FUSION_DEBUG(fn, "Prediction 5");
+
   ekf_.Predict();
 
   /*****************************************************************************
@@ -147,9 +169,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
+    FUSION_DEBUG(fn, "Update Radar");
     // Radar updates
     ekf_.UpdateEKF( measurement_pack.raw_measurements_ );
   } else {
+    FUSION_DEBUG(fn, "Update Ladar");
     // Laser updates
     ekf_.Update( measurement_pack.raw_measurements_ );
   }

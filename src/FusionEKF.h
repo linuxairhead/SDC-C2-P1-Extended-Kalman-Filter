@@ -9,7 +9,7 @@
 #include <string>
 
 #ifdef DEBUG
-#define FUSION_DEBUG(fn, log) std::cout << "FusionEKF " << fn << " : " << log;
+#define FUSION_DEBUG(fn, log) std::cout << "FusionEKF " << fn << " : " << log << "\n";
 #else
 #define FUSION_DEBUG(fn, log)
 #endif

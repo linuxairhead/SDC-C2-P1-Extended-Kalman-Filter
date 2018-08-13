@@ -7,7 +7,7 @@
 #include <string>
 
 #ifdef DEBUG 
-#define KF_DEBUG(fn, log) std::cout << "KalmanFilter " << fn << " : " << log;
+#define KF_DEBUG(fn, log) std::cout << "KalmanFilter " << fn << " : " << log << "\n";
 #else
 #define KF_DEBUG(fn, log) 
 #endif
