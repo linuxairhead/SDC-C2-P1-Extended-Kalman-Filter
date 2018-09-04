@@ -73,3 +73,24 @@ Self-Driving Car Engineer Nanodegree Program
 ## Measuring Performance
 * RMSE (Root Mean Squared Error ) measure the deviation of the estimated state from the true state
 ![alt text][image8]
+
+## Result
+
+Sample [output](https://github.com/linuxairhead/SDC-C2-P1-Extended-Kalman-Filter/blob/master/output/output1.txt)
+
+x_ =  -7.23246
+  10.8959
+  5.19534
+0.0613836
+P_ = 0.00706985 0.00226997  0.0184169 0.00695398
+0.00226997 0.00511771 0.00826626  0.0114158
+ 0.0184169 0.00826626   0.120551  0.0371732
+0.00695398  0.0114158  0.0371732  0.0888411
+42["estimate_marker",{"estimate_x":-7.2324597618501,"estimate_y":10.895918920185,"rmse_vx":0.451266745401149,"rmse_vy":0.439935067660722,"rmse_x":0.0973177830428573,"rmse_y":0.0854597379065612}]
+
+|  Performance  |       %           |
+|:-------------:|:-----------------:|
+|   rmse_vx     |        0.46       |
+|   rmse_vy     |        0.45       |
+|   rmse_x      |        0.097      |
+|   rmse_y      |        0.085      |
